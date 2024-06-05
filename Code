@@ -1,0 +1,32 @@
+# Importing pandas and matplotlib
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Read in the Netflix CSV as a DataFrame
+netflix_df = pd.read_csv(r"C:\Users\phuoc\Downloads\netflix_data.csv")
+netflix_df.head()
+
+# Filter movies released between 1990 and 1999
+movie_1990 = netflix_df.query('1990 <= release_year <= 1999 & type == "Movie"')
+
+# Group movies by duration and count the number of shows
+duration_count = movie_1990.groupby('duration')['show_id'].agg('count').reset_index()
+
+duration_count_sort = duration_count.sort_values('show_id', ascending = False)
+
+# Plot the distribution of movie durations
+plt.hist(duration_count['duration'])
+plt.xlabel('Duration (minutes)')
+plt.ylabel('Number of Show')
+plt.title('Movie Duration Distribution in 1980s')
+
+# Find the duration with the highest count
+most_frequent = duration_count_sort.iloc[0]
+print(f"Highest duration: {most_frequent}")
+
+plt.show()
+
+#Count the number of short action movies
+short_action_movie = movie_1990.query('duration < 90 & genre == "Action"')
+short_movie_count = short_action_movie.count().iloc[0]
+print(short_movie_count)
